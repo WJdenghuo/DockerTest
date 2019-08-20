@@ -1,6 +1,6 @@
 FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
 WORKDIR /app
-EXPOSE 80
+EXPOSE 8812
 EXPOSE 443
 
 FROM microsoft/dotnet:2.2-sdk AS build
@@ -17,4 +17,5 @@ RUN dotnet publish "DockerTest.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "DockerTest.dll"]
+#指定监听端口[, "--server.urls", "http://*:8810"],同时需要修改expose
+ENTRYPOINT ["dotnet", "DockerTest.dll", "--server.urls", "http://*:8812"]
